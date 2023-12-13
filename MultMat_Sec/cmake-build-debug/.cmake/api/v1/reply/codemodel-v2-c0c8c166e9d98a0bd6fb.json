@@ -1,0 +1,69 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.23"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "MultMat_Sec3",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "MultMat_Sec::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-MultMat_Sec-Debug-da199cabc6b84bb75a69.json",
+					"name" : "MultMat_Sec",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "MultMat_Test::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-MultMat_Test-Debug-149c6f640e1d46c6944d.json",
+					"name" : "MultMat_Test",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/nando/Library/CloudStorage/Dropbox/Docencia/Grado_Informatica/Sistemas_Concurrentes_y_Paralelos_2023-24/Practicas/Enunciados/Pr\u00e1ctica4_Multiplicaci\u00f3n_Matrices_C/Versi\u00f3n_Secuencial/MultMat_Sec/cmake-build-debug",
+		"source" : "/Users/nando/Library/CloudStorage/Dropbox/Docencia/Grado_Informatica/Sistemas_Concurrentes_y_Paralelos_2023-24/Practicas/Enunciados/Pr\u00e1ctica4_Multiplicaci\u00f3n_Matrices_C/Versi\u00f3n_Secuencial/MultMat_Sec"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

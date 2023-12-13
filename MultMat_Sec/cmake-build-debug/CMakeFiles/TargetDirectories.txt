@@ -1,0 +1,4 @@
+/Users/nando/Library/CloudStorage/Dropbox/Docencia/Grado_Informatica/Sistemas_Concurrentes_y_Paralelos_2023-24/Practicas/Enunciados/Práctica4_Multiplicación_Matrices_C/Versión_Secuencial/MultMat_Sec/cmake-build-debug/CMakeFiles/MultMat_Sec.dir
+/Users/nando/Library/CloudStorage/Dropbox/Docencia/Grado_Informatica/Sistemas_Concurrentes_y_Paralelos_2023-24/Practicas/Enunciados/Práctica4_Multiplicación_Matrices_C/Versión_Secuencial/MultMat_Sec/cmake-build-debug/CMakeFiles/MultMat_Test.dir
+/Users/nando/Library/CloudStorage/Dropbox/Docencia/Grado_Informatica/Sistemas_Concurrentes_y_Paralelos_2023-24/Practicas/Enunciados/Práctica4_Multiplicación_Matrices_C/Versión_Secuencial/MultMat_Sec/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/nando/Library/CloudStorage/Dropbox/Docencia/Grado_Informatica/Sistemas_Concurrentes_y_Paralelos_2023-24/Practicas/Enunciados/Práctica4_Multiplicación_Matrices_C/Versión_Secuencial/MultMat_Sec/cmake-build-debug/CMakeFiles/rebuild_cache.dir
