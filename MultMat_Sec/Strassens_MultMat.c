@@ -2,13 +2,67 @@
 // Created by Fernando Cores Prado on 4/12/23.
 //
 
-#include "Strassens_MultMat.h"
-#include <time.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include <memory.h>
+#include "Strassens_MultMat.h"
 #include "Matrix.h"
+#include "Errors.h"
+#include <pthread.h>
 
 double elapsed_str;
 int Dim2StopRecursivity = 10;
+
+struct StrassenThread{
+    float **A;
+    float **B;
+    float **C;
+    int n; 
+    int operation; 
+};
+
+typedef struct StrassenThread SThread;
+
+
+float ** concurrentStrassensMultiplication(float ** matrixA, float** matrixB, int n) {
+    struct timespec start_time, finish_time;
+    clock_gettime(CLOCK_MONOTONIC, &start_time); // Iniciar cronómetro
+
+    float ** result;
+
+    if (n > Dim2StopRecursivity) {
+        // ... Preparación para la concurrencia
+
+        pthread_t threads[7];
+        struct StrassenThread sThread[7];
+
+        // Inicialización de datos del hilo y creación de hilos
+        // ...
+
+        for (int i = 0; i < 7; i++) {
+            pthread_create(&threads[i], NULL, strassenThreadFunction, (void*) &sThread[i]);
+        }
+
+        for (int i = 0; i < 7; i++) {
+            pthread_join(threads[i], NULL);
+        }
+
+        // Combinar resultados de los hilos en la matriz 'result'
+        // ...
+    } else {
+        result = standardMultiplication(matrixA, matrixB, n);
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &finish_time); // Detener cronómetro
+    elapsed_str = (finish_time.tv_sec - start_time.tv_sec) + (finish_time.tv_nsec - start_time.tv_nsec) / 1000000000.0;
+
+    return result;
+}
+
+
+
+
 
 
 /*
