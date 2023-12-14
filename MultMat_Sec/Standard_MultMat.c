@@ -3,9 +3,12 @@
 //
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #include <memory.h>
 #include "Standard_MultMat.h"
+#include "Matrix.h"
+#include "Errors.h"
 #include <pthread.h>
 
 double elapsed_std;
@@ -22,7 +25,7 @@ typedef struct MultiplyThread MThread;
 
 void* concurrentStandardMultiplication_ijk(void* arg) {
     MThread* m_thread = (MThread*)arg;
-    for (int i = m_thread->start; i < m_thread->end i++) {
+    for (int i = m_thread->start; i < m_thread->end; i++) {
         for (int j = 0; j < m_thread->n; j++) {
             m_thread->result[i][j] = 0;
             for (int k = 0; k < m_thread->n; k++) {
@@ -33,7 +36,7 @@ void* concurrentStandardMultiplication_ijk(void* arg) {
     pthread_exit(NULL);
 }
 
-void concurrentStandardMultiplication(float **matrixA, float **matrixB, int n, int num_threads) {
+float ** concurrentStandardMultiplication(float **matrixA, float **matrixB, int n, int num_threads) {
     pthread_t threads[num_threads];
     MThread mThread[num_threads];
 
@@ -43,9 +46,9 @@ void concurrentStandardMultiplication(float **matrixA, float **matrixB, int n, i
 
     float** result = allocateMatrix(n); 
 
-    struct timespec start, finish;
+    struct timespec start_time, finish_time;
 
-    clock_gettime(CLOCK_MONOTONIC, &start);
+    clock_gettime(CLOCK_MONOTONIC, &start_time);
 
     for (int i = 0; i < num_threads; i++) {
         mThread[i].start= start;
@@ -68,9 +71,9 @@ void concurrentStandardMultiplication(float **matrixA, float **matrixB, int n, i
         pthread_join(threads[i], NULL);
     }
 
-    clock_gettime(CLOCK_MONOTONIC, &finish);
-    *elapsed_time = (finish.tv_sec - start.tv_sec);
-    *elapsed_time += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    clock_gettime(CLOCK_MONOTONIC, &finish_time);
+    elapsed_std = (finish_time.tv_sec - start_time.tv_sec);
+    elapsed_std += (finish_time.tv_nsec - start_time.tv_nsec) / 1000000000.0;
 
     return result;
 

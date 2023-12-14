@@ -32,6 +32,7 @@ int main(int argc, char ** argv)
     char * matrixA_name, * matrixB_name;
     float **matrixA, **matrixB;
     float **standardRes, **strassenRes;
+    int num_threads;
 
     if (DEBUG) {
         sprintf(debug_msg,"[Main] Start Program with %d parameters.\n",argc);
@@ -41,7 +42,7 @@ int main(int argc, char ** argv)
     {
         int n1, n2;
         double int_part;
-        int num_threads;
+        
         openMatrix(argv[1], &matrixA,&n1);
         openMatrix(argv[2], &matrixB,&n2);
         if (n1!=n2)
@@ -75,7 +76,7 @@ int main(int argc, char ** argv)
         printMatrixC(matrixB, n, COLOR_GREEN_B);
     }
 
-    float ** stdRes = concurrentStandardMultiplication(matrixA,matrixB,n);
+    float ** stdRes = concurrentStandardMultiplication(matrixA,matrixB,n, num_threads);
     if (n<10) {
         print("Standard Multiplication Result:\n");
         printMatrix(stdRes, n);
@@ -85,7 +86,7 @@ int main(int argc, char ** argv)
     printMessage(debug_msg,COLOR_CYAN_B);
 
 
-    float ** strassensRes = concurrentStrassensMultiplication(matrixA,matrixB,n);
+    float ** strassensRes = concurrentStrassensMultiplication(matrixA,matrixB,n, num_threads);
     if (n<10) {
         print("Strassen's Multiplication Result:\n");
         printMatrix(strassensRes, n);

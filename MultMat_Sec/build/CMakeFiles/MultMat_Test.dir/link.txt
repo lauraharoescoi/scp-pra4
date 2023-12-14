@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/MultMat_Test.dir/MultMat_Test.c.o CMakeFiles/MultMat_Test.dir/Errors.c.o CMakeFiles/MultMat_Test.dir/Matrix.c.o CMakeFiles/MultMat_Test.dir/Standard_MultMat.c.o CMakeFiles/MultMat_Test.dir/Strassens_MultMat.c.o -o MultMat_Test 

@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/MultMat_Sec.dir/MultMat_Sec.c.o CMakeFiles/MultMat_Sec.dir/Errors.c.o CMakeFiles/MultMat_Sec.dir/Matrix.c.o CMakeFiles/MultMat_Sec.dir/Standard_MultMat.c.o CMakeFiles/MultMat_Sec.dir/Strassens_MultMat.c.o -o MultMat_Sec 
