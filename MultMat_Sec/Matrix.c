@@ -125,3 +125,12 @@ void saveMatrix(char *outputFile, float ** matrix,int n)
     }
     fclose(fileMatrix);
 }
+
+float** allocateMatrix(int n) {
+    float** matrix = (float**)malloc(n * sizeof(float*));
+    for (int i = 0; i < n; i++) {
+        matrix[i] = (float*)malloc(n * sizeof(float));
+    }
+    return matrix;
+}
+

@@ -6,8 +6,77 @@
 #include <time.h>
 #include <memory.h>
 #include "Standard_MultMat.h"
+#include <pthread.h>
 
 double elapsed_std;
+
+struct MultiplyThread{
+    int start;
+    int end;
+    float **matrixA;
+    float **matrixB;
+    float **result;
+    int n;
+};
+typedef struct MultiplyThread MThread;
+
+void* concurrentStandardMultiplication_ijk(void* arg) {
+    MThread* m_thread = (MThread*)arg;
+    for (int i = m_thread->start; i < m_thread->end i++) {
+        for (int j = 0; j < m_thread->n; j++) {
+            m_thread->result[i][j] = 0;
+            for (int k = 0; k < m_thread->n; k++) {
+                m_thread->result[i][j] += m_thread->matrixA[i][k] * m_thread->matrixB[k][j];
+            }
+        }
+    }
+    pthread_exit(NULL);
+}
+
+void concurrentStandardMultiplication(float **matrixA, float **matrixB, int n, int num_threads) {
+    pthread_t threads[num_threads];
+    MThread mThread[num_threads];
+
+    int rows_per_thread = n / num_threads;
+    int extra_rows = n % num_threads;
+    int start= 0;
+
+    float** result = allocateMatrix(n); 
+
+    struct timespec start, finish;
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    for (int i = 0; i < num_threads; i++) {
+        mThread[i].start= start;
+        mThread[i].end= start + rows_per_thread + (extra_rows > 0 ? 1 : 0);
+        start= mThread[i].end;
+
+        mThread[i].matrixA = matrixA;
+        mThread[i].matrixB = matrixB;
+        mThread[i].result = result;
+        mThread[i].n = n;
+
+        if (pthread_create(&threads[i], NULL, concurrentStandardMultiplication_ijk, (void*) &mThread[i]) != 0) {
+            perror("Failed to create thread");
+        }
+
+        if (extra_rows > 0) extra_rows--;
+    }
+
+    for (int i = 0; i < num_threads; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    *elapsed_time = (finish.tv_sec - start.tv_sec);
+    *elapsed_time += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+    return result;
+
+}
+
+
 
 /*
 * Standard Matrix multiplication with O(n^3) time complexity.
@@ -30,7 +99,7 @@ float ** standardMultiplication_ijk(float ** matrixA,float ** matrixB,int n)
     clock_gettime(CLOCK_MONOTONIC, &start);
 
     result = (float**)malloc(n*sizeof(float *));
-    for(i=0;i<n;i++){
+    for(i=0;i<n;i++){  
         result[i]=(float*)malloc(n*sizeof(float));
         memset(result[i],0,n*sizeof(float));
         for(j=0;j<n;j++){
