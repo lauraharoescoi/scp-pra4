@@ -14,55 +14,110 @@
 double elapsed_str;
 int Dim2StopRecursivity = 10;
 
-struct StrassenThread{
-    float **A;
-    float **B;
-    float **C;
-    int n; 
-    int operation; 
+struct StrassenThread {
+    float **matrixA;
+    float **matrixB;
+    int n;
+    float **result;  // Aquí se almacenará el resultado de la sub-operación
 };
 
-typedef struct StrassenThread SThread;
+void* strassenThread(void* args) {
+    struct StrassenThread *data = (struct StrassenThread*) args;
+    data->result = strassensMultRec(data->matrixA, data->matrixB, data->n);
+    return NULL;
+}
 
 
-float ** concurrentStrassensMultiplication(float ** matrixA, float** matrixB, int n) {
-    struct timespec start_time, finish_time;
-    clock_gettime(CLOCK_MONOTONIC, &start_time); // Iniciar cronómetro
+// ... (definiciones previas)
 
-    float ** result;
+float** concStrassensMultRec(float ** matrixA, float** matrixB, int n) {
+    float ** result = createZeroMatrix(n);
 
-    if (n > Dim2StopRecursivity) {
-        // ... Preparación para la concurrencia
+    if(n > Dim2StopRecursivity) {
+        // ... (División de matrices)
+        float ** a11 = divide(matrixA, n, 0, 0);
+        float ** a12 = divide(matrixA, n, 0, (n/2));
+        float ** a21 = divide(matrixA, n, (n/2), 0);
+        float ** a22 = divide(matrixA, n, (n/2), (n/2));
+        float ** b11 = divide(matrixB, n, 0, 0);
+        float ** b12 = divide(matrixB, n, 0, n/2);
+        float ** b21 = divide(matrixB, n, n/2, 0);
+        float ** b22 = divide(matrixB, n, n/2, n/2);
 
         pthread_t threads[7];
-        struct StrassenThread sThread[7];
+        struct StrassenThread SThreads[7];
 
-        // Inicialización de datos del hilo y creación de hilos
-        // ...
+        // Inicializar args y crear hilos para M1 a M7
+
+        SThreads[0] = (struct StrassenThread){ addMatrix(a11, a22, n/2), addMatrix(b11, b22, n/2), n/2, NULL };
+        SThreads[1] = (struct StrassenThread){ addMatrix(a21, a22, n/2), b11, n/2, NULL };
+        SThreads[2] = (struct StrassenThread){ a11, subMatrix(b12, b22, n/2), n/2, NULL };
+        SThreads[3] = (struct StrassenThread){ a22, subMatrix(b21, b11, n/2), n/2, NULL };
+        SThreads[4] = (struct StrassenThread){ addMatrix(a11, a12, n/2), b22, n/2, NULL };
+        SThreads[5] = (struct StrassenThread){ subMatrix(a21, a11, n/2), addMatrix(b11, b12, n/2), n/2, NULL };
+        SThreads[6] = (struct StrassenThread){ subMatrix(a12, a22, n/2), addMatrix(b21, b22, n/2), n/2, NULL };
 
         for (int i = 0; i < 7; i++) {
-            pthread_create(&threads[i], NULL, strassenThreadFunction, (void*) &sThread[i]);
+            pthread_create(&threads[i], NULL, strassenThread, &SThreads[i]);
         }
-
+    
+        // Esperar a que los hilos terminen
         for (int i = 0; i < 7; i++) {
             pthread_join(threads[i], NULL);
         }
 
-        // Combinar resultados de los hilos en la matriz 'result'
-        // ...
+        float** c11 = addMatrix(subMatrix(addMatrix(SThreads[0].result, SThreads[3].result, n/2), SThreads[4].result, n/2), SThreads[6].result, n/2);
+        float** c12 = addMatrix(SThreads[2].result, SThreads[4].result, n/2);
+        float** c21 = addMatrix(SThreads[1].result, SThreads[3].result, n/2);
+        float** c22 = addMatrix(subMatrix(addMatrix(SThreads[0].result, SThreads[2].result, n/2), SThreads[1].result, n/2), SThreads[5].result, n/2);
+        
+
+        // Limpieza
+        for (int i = 0; i < 7; i++) {
+            freeMatrix(SThreads[i].result, n/2);  
+        }
+
+        free(a11); free(a12); free(a21); free(a22);
+        free(b11); free(b12); free(b21); free(b22);
+
+        // Componer la matriz resultante
+        compose(c11,result,0,0,n/2);
+        compose(c12,result,0,n/2,n/2);
+        compose(c21,result,n/2,0,n/2);
+        compose(c22,result,n/2,n/2,n/2);
+
+        freeMatrix(c11, n/2); freeMatrix(c12, n/2); freeMatrix(c21, n/2); freeMatrix(c22, n/2);
+
     } else {
-        result = standardMultiplication(matrixA, matrixB, n);
+        // Caso base
+        return standardMultiplication(matrixA, matrixB, n);
     }
-
-    clock_gettime(CLOCK_MONOTONIC, &finish_time); // Detener cronómetro
-    elapsed_str = (finish_time.tv_sec - start_time.tv_sec) + (finish_time.tv_nsec - start_time.tv_nsec) / 1000000000.0;
-
     return result;
 }
 
+void freeMatrix(float** matrix, int n) {
+    for (int i = 0; i < n; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
+}
 
+float ** concStrassensMultiplication(float ** matrixA, float** matrixB,int n)
+{
+    struct timespec start, finish;
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
+    if (n>32)
+        Dim2StopRecursivity = n/16;
 
+    float ** result = concStrassensMultRec(matrixA,matrixB,n);
+
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    elapsed_str = (finish.tv_sec - start.tv_sec);
+    elapsed_str += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+    return result;
+}
 
 
 /*
@@ -125,7 +180,8 @@ float** strassensMultRec(float ** matrixA, float** matrixB,int n){
         compose(c21,result,n/2,0,n/2);
         compose(c22,result,n/2,n/2,n/2);
 
-        free(c11); free(c12); free(c21); free(c22);
+        freeMatrix(c11, n/2); freeMatrix(c12, n/2); freeMatrix(c21, n/2); freeMatrix(c22, n/2);
+
     }
     else {
         //This is the terminating condition for recurssion.

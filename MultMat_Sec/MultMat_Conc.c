@@ -86,7 +86,7 @@ int main(int argc, char ** argv)
     printMessage(debug_msg,COLOR_CYAN_B);
 
 
-    float ** strassensRes = concurrentStrassensMultiplication(matrixA,matrixB,n, num_threads);
+    float ** strassensRes = concStrassensMultiplication(matrixA,matrixB,n);
     if (n<10) {
         print("Strassen's Multiplication Result:\n");
         printMatrix(strassensRes, n);
