@@ -1,5 +1,0 @@
-/home/laura/Descargas/scp-pra4/MultMat_Sec/build/CMakeFiles/MultMat_Sec.dir
-/home/laura/Descargas/scp-pra4/MultMat_Sec/build/CMakeFiles/MultMat_Test.dir
-/home/laura/Descargas/scp-pra4/MultMat_Sec/build/CMakeFiles/MultMat_Conc.dir
-/home/laura/Descargas/scp-pra4/MultMat_Sec/build/CMakeFiles/edit_cache.dir
-/home/laura/Descargas/scp-pra4/MultMat_Sec/build/CMakeFiles/rebuild_cache.dir

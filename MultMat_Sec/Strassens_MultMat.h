@@ -17,7 +17,6 @@ float** divide(float ** matrixA,int n, int row,int col);
 float ** addMatrix(float**,float**,int);
 float** subMatrix(float**,float**,int);
 void compose(float**,float**,int,int,int);
-void freeMatrix(float** matrix, int n);
 float** concStrassensMultiplication(float **, float **,int);
 
 

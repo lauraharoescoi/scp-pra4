@@ -86,7 +86,7 @@ int main(int argc, char ** argv)
     printMessage(debug_msg,COLOR_CYAN_B);
 
 
-    float ** strassensRes = concStrassensMultiplication(matrixA,matrixB,n);
+    float ** strassensRes = concStrassensMultiplication(matrixA,matrixB, n);
     if (n<10) {
         print("Strassen's Multiplication Result:\n");
         printMatrix(strassensRes, n);

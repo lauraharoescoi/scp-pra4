@@ -28,13 +28,11 @@ void* strassenThread(void* args) {
 }
 
 
-// ... (definiciones previas)
-
 float** concStrassensMultRec(float ** matrixA, float** matrixB, int n) {
     float ** result = createZeroMatrix(n);
 
     if(n > Dim2StopRecursivity) {
-        // ... (División de matrices)
+        // División de matrices
         float ** a11 = divide(matrixA, n, 0, 0);
         float ** a12 = divide(matrixA, n, 0, (n/2));
         float ** a21 = divide(matrixA, n, (n/2), 0);
@@ -47,7 +45,7 @@ float** concStrassensMultRec(float ** matrixA, float** matrixB, int n) {
         pthread_t threads[7];
         struct StrassenThread SThreads[7];
 
-        // Inicializar args y crear hilos para M1 a M7
+        // Inicializar SThreads y crear hilos para M1 a M7
 
         SThreads[0] = (struct StrassenThread){ addMatrix(a11, a22, n/2), addMatrix(b11, b22, n/2), n/2, NULL };
         SThreads[1] = (struct StrassenThread){ addMatrix(a21, a22, n/2), b11, n/2, NULL };
@@ -95,12 +93,6 @@ float** concStrassensMultRec(float ** matrixA, float** matrixB, int n) {
     return result;
 }
 
-void freeMatrix(float** matrix, int n) {
-    for (int i = 0; i < n; i++) {
-        free(matrix[i]);
-    }
-    free(matrix);
-}
 
 float ** concStrassensMultiplication(float ** matrixA, float** matrixB,int n)
 {

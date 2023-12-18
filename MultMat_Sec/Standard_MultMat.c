@@ -23,14 +23,15 @@ struct MultiplyThread{
 };
 typedef struct MultiplyThread MThread;
 
-void* concurrentStandardMultiplication_ijk(void* arg) {
+void* standardThread(void* arg) {
     MThread* m_thread = (MThread*)arg;
     for (int i = m_thread->start; i < m_thread->end; i++) {
         for (int j = 0; j < m_thread->n; j++) {
-            m_thread->result[i][j] = 0;
+            float sum = 0;
             for (int k = 0; k < m_thread->n; k++) {
-                m_thread->result[i][j] += m_thread->matrixA[i][k] * m_thread->matrixB[k][j];
+                sum += m_thread->matrixA[i][k] * m_thread->matrixB[k][j];
             }
+            m_thread->result[i][j] = sum;
         }
     }
     pthread_exit(NULL);
@@ -52,7 +53,7 @@ float ** concurrentStandardMultiplication(float **matrixA, float **matrixB, int 
 
     for (int i = 0; i < num_threads; i++) {
         mThread[i].start= start;
-        mThread[i].end= start + rows_per_thread + (extra_rows > 0 ? 1 : 0);
+        mThread[i].end= start + rows_per_thread + (i < extra_rows? 1 : 0);
         start= mThread[i].end;
 
         mThread[i].matrixA = matrixA;
@@ -60,8 +61,13 @@ float ** concurrentStandardMultiplication(float **matrixA, float **matrixB, int 
         mThread[i].result = result;
         mThread[i].n = n;
 
-        if (pthread_create(&threads[i], NULL, concurrentStandardMultiplication_ijk, (void*) &mThread[i]) != 0) {
+        if (pthread_create(&threads[i], NULL, standardThread, (void*) &mThread[i]) != 0) {
             perror("Failed to create thread");
+            for (int j = 0; j < i; j++) {
+                pthread_cancel(threads[j]);
+            }
+            freeMatrix(result, n);
+            exit(EXIT_FAILURE);
         }
 
         if (extra_rows > 0) extra_rows--;
