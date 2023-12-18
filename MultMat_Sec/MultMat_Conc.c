@@ -1,6 +1,10 @@
-//
-// Created by Fernando Cores Prado on 4/12/23.
-//
+/* ---------------------------------------------------------------
+Práctica 4.
+Código fuente: MultMat_Conc.c
+Grau Informàtica
+Laura Haro Escoi
+David Mas Martínez
+--------------------------------------------------------------- */
 
 #include <stdio.h>
 #include <stdlib.h>

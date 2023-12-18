@@ -1,7 +1,10 @@
-//
-// Created by Fernando Cores Prado on 4/12/23.
-//
-
+/* ---------------------------------------------------------------
+Práctica 4.
+Código fuente: Strassens_MultMat.c
+Grau Informàtica
+Laura Haro Escoi
+David Mas Martínez
+--------------------------------------------------------------- */
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -18,7 +21,7 @@ struct StrassenThread {
     float **matrixA;
     float **matrixB;
     int n;
-    float **result;  // Aquí se almacenará el resultado de la sub-operación
+    float **result;  
 };
 
 void* strassenThread(void* args) {
